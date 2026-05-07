@@ -2,6 +2,8 @@ import Image from 'next/image'
 import type { Metadata } from 'next'
 import { getRecentVideos } from '@/lib/youtube'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Ministerio Internacional Ágape | En esta casa, cabemos todos',
   description: 'Una iglesia en Honduras con más de 26 años sirviendo a Dios y la sociedad. Servicios martes y domingos. ¡Bienvenido a casa!',

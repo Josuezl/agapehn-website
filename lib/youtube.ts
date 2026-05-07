@@ -33,7 +33,7 @@ function decodeXmlEntities(str: string): string {
 export async function getRecentVideos(count = 6): Promise<YouTubeVideo[]> {
   try {
     const res = await fetch(RSS_URL, {
-      next: { revalidate: 3600 },
+      cache: 'no-store',
       headers: { Accept: 'application/xml, text/xml, */*' },
     })
     if (!res.ok) return []
