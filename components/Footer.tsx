@@ -108,7 +108,7 @@ export default function Footer() {
             <div className="flex gap-3 mb-8">
               {/* Facebook */}
               <a
-                href="https://facebook.com/MinisterioInternacionalAgape"
+                href="https://www.facebook.com/iglesia.agape/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-teal transition-colors"
@@ -120,7 +120,7 @@ export default function Footer() {
               </a>
               {/* Instagram */}
               <a
-                href="https://instagram.com/MinisterioInternacionalAgape"
+                href="https://www.instagram.com/iglesiaagapehn/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-teal transition-colors"
@@ -132,7 +132,7 @@ export default function Footer() {
               </a>
               {/* YouTube */}
               <a
-                href="https://youtube.com/@MinisterioInternacionalAgape"
+                href="https://www.youtube.com/@ministeriointernacionalaga1060/videos"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-teal transition-colors"

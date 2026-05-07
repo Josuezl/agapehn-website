@@ -9,6 +9,7 @@ const navLinks = [
   { href: '#nosotros', label: 'Nosotros' },
   { href: '#visita', label: 'Visita' },
   { href: '#mensajes', label: 'Mensajes' },
+  { href: '#galeria', label: 'Galería' },
   { href: '#ministerios', label: 'Ministerios' },
   { href: '#iglesias', label: 'Iglesias' },
 ]
