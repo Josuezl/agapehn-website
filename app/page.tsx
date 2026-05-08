@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import type { Metadata } from 'next'
 import { getRecentVideos } from '@/lib/youtube'
+import HeroParallax from '@/components/HeroParallax'
 
 export const dynamic = 'force-dynamic'
 
@@ -85,10 +86,7 @@ export default async function HomePage() {
           INICIO
        */}
       <section id="inicio" className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-navy-deeper">
-        <Image
-          src="/hero-bg.png"
-          alt="Ministerio Internacional Ágape" fill className="object-cover object-center" priority
-        />
+        <HeroParallax />
         <div className="absolute inset-0 bg-gradient-to-b from-navy-deeper/80 via-navy-deeper/60 to-navy-deeper/90" />
         <div className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto">
           <p className="text-teal font-semibold tracking-[0.3em] text-sm md:text-base uppercase mb-4">
