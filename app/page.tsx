@@ -488,7 +488,7 @@ export default async function HomePage() {
           {/* Honduras */}
           <div className="flex items-center gap-4 mb-8">
             <span className="text-3xl"></span>
-            <h3 className="font-heading font-bold text-2xl text-white">Honduras — 9 iglesias</h3>
+            <h3 className="font-heading font-bold text-2xl text-white">Honduras <span className="text-white/50 font-normal">(9 iglesias)</span></h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
             {hondurasChurches.map((c, i) => (
@@ -505,7 +505,7 @@ export default async function HomePage() {
           {/* Internacional */}
           <div className="flex items-center gap-4 mb-8">
             <span className="text-3xl"></span>
-            <h3 className="font-heading font-bold text-2xl text-white">Internacional — 2 iglesias</h3>
+            <h3 className="font-heading font-bold text-2xl text-white">Internacional <span className="text-white/50 font-normal">(2 iglesias)</span></h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
             {internationalChurches.map((c, i) => (
