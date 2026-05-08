@@ -48,10 +48,10 @@ const mainMinistries = [
 ]
 
 const communityMinistries = [
-  { name: 'Tribus', description: 'Grupos de amistad para encaminarte hacia la madurez en Cristo.', tag: 'Todas las edades' },
-  { name: 'Explosión', description: 'El ministerio juvenil. Domingos a las 11:30 a.m.', tag: 'Jóvenes' },
-  { name: 'Agape Kids', description: 'Formamos a los niños en el conocimiento de la Palabra de Dios.', tag: 'Niños' },
-  { name: 'Grupos en Casa', description: 'Familias que abren su hogar para compartir el evangelio.', tag: 'Comunidad' },
+  { name: 'Tribus', description: 'Grupos de amistad para encaminarte hacia la madurez en Cristo.', tag: 'Todas las edades', logo: '/Logos/Tribus.png' },
+  { name: 'Explosión', description: 'El ministerio juvenil. Domingos a las 11:30 a.m.', tag: 'Jóvenes', logo: '/Logos/Explosion.png' },
+  { name: 'Agape Kids', description: 'Formamos a los niños en el conocimiento de la Palabra de Dios.', tag: 'Niños', logo: '/Logos/Agape Kids.png' },
+  { name: 'Grupos en Casa', description: 'Familias que abren su hogar para compartir el evangelio.', tag: 'Comunidad', logo: '/Logos/Grupos en casa .png' },
 ]
 
 const hondurasChurches = [
@@ -368,7 +368,7 @@ export default async function HomePage() {
        */}
       <section id="galeria" className="py-24 bg-navy overflow-hidden">
         <div className="container-custom mb-12">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-white tracking-widest uppercase">Comunidad</h2>
             <div className="flex items-center gap-3">
               <a href="https://www.facebook.com/iglesia.agape/" target="_blank" rel="noopener noreferrer"
@@ -446,9 +446,12 @@ export default async function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {communityMinistries.map((m, i) => (
-              <div key={i} className="bg-white/10 p-6 rounded-2xl transition-shadow border border-white/10">
-                <div className="flex items-center justify-between mb-4">
+              <div key={i} className="bg-white/10 p-6 rounded-2xl transition-shadow border border-white/10 flex flex-col items-center text-center">
+                <div className="w-full flex justify-between items-start mb-4">
                   <span className="text-xs font-bold text-teal bg-teal/20 px-3 py-1 rounded-full">{m.tag}</span>
+                </div>
+                <div className="mb-4 h-20 flex items-center justify-center">
+                  <Image src={m.logo} alt={m.name} width={80} height={80} className="h-20 object-contain" style={{ width: 'auto' }} />
                 </div>
                 <h4 className="font-heading font-bold text-white text-lg mb-2">{m.name}</h4>
                 <p className="text-white/70 text-sm leading-relaxed">{m.description}</p>
