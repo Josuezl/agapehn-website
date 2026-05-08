@@ -369,7 +369,7 @@ export default async function HomePage() {
       <section id="galeria" className="py-24 bg-navy overflow-hidden">
         <div className="container-custom mb-12">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-white tracking-widest uppercase">Comunidad</h2>
+            <h2 className="font-heading font-bold text-3xl text-white tracking-widest uppercase">Comunidad</h2>
             <div className="flex items-center gap-3">
               <a href="https://www.facebook.com/iglesia.agape/" target="_blank" rel="noopener noreferrer"
                 className="w-11 h-11 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition-colors">
@@ -447,13 +447,9 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {communityMinistries.map((m, i) => (
               <div key={i} className="bg-white/10 p-6 rounded-2xl transition-shadow border border-white/10 flex flex-col items-center text-center">
-                <div className="w-full flex justify-between items-start mb-4">
-                  <span className="text-xs font-bold text-teal bg-teal/20 px-3 py-1 rounded-full">{m.tag}</span>
+                <div className="my-4 h-32 flex items-center justify-center">
+                  <Image src={m.logo} alt={m.name} width={128} height={128} className="h-32 object-contain" style={{ width: 'auto' }} />
                 </div>
-                <div className="mb-4 h-20 flex items-center justify-center">
-                  <Image src={m.logo} alt={m.name} width={80} height={80} className="h-20 object-contain" style={{ width: 'auto' }} />
-                </div>
-                <h4 className="font-heading font-bold text-white text-lg mb-2">{m.name}</h4>
                 <p className="text-white/70 text-sm leading-relaxed">{m.description}</p>
               </div>
             ))}
