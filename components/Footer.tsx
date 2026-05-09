@@ -37,7 +37,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Col 1: Logo + Address */}
           <div className="lg:col-span-1">
-            <Logo className="h-10 w-auto text-white mb-4" />
+            <Logo color="white" className="mb-4" />
             <p className="text-teal font-semibold text-sm mb-1">
               Ministerio Internacional
             </p>

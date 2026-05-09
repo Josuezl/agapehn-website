@@ -8,13 +8,13 @@ const serviceTimes = [
   {
     day: 'Martes',
     time: '6:30 p.m.',
-    description: 'Servicio familiar entre semana',
+    description: 'Servicio principal',
     icon: '',
   },
   {
     day: 'Domingo',
     time: '8:00 a.m.',
-    description: 'Servicio matutino',
+    description: 'Servicio principal',
     icon: '',
   },
   {

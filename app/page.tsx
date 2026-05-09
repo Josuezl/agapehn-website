@@ -3,11 +3,11 @@ import type { Metadata } from 'next'
 import { getRecentVideos } from '@/lib/youtube'
 import HeroParallax from '@/components/HeroParallax'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Ministerio Internacional Ágape | En esta casa, cabemos todos',
-  description: 'Una iglesia en Honduras con más de 26 años sirviendo a Dios y la sociedad. Servicios martes y domingos. ¡Bienvenido a casa!',
+  description: 'Una iglesia en Honduras sirviendo a Dios y la sociedad por muchos años. Servicios martes y domingos. ¡Bienvenido a casa!',
 }
 
 const YOUTUBE_CHANNEL = 'https://www.youtube.com/@ministeriointernacionalaga1060/videos'
@@ -38,7 +38,7 @@ const expectations = [
   { title: 'Comunidad y Familia', description: 'Serás recibido como parte de nuestra familia desde el primer momento.' },
   { title: 'Agape Kids', description: 'Tus niños en un ambiente seguro y divertido, aprendiendo la Palabra según su edad.' },
   { title: 'Estacionamiento', description: 'Equipo dedicado a ayudarte desde que llegas. ¡Tu primera impresión es nuestra prioridad!' },
-  { title: 'Equipo Info', description: 'Listo para responder todas tus preguntas y orientarte en tu primera visita.' },
+  { title: 'Info', description: 'Listo para responder todas tus preguntas y orientarte en tu primera visita.' },
 ]
 
 const mainMinistries = [
@@ -57,7 +57,7 @@ const communityMinistries = [
 
 const hondurasChurches = [
   { pastors: 'Armando y Gladis de Medina', city: 'Tegucigalpa', region: 'Francisco Morazán', isMain: true },
-  { pastors: 'Alejandro y Gabriela de Medina', city: 'Tegucigalpa', region: 'Francisco Morazán', note: 'Pastores Jóvenes — Explosión' },
+  { pastors: 'Alejandro y Gabriela de Medina', city: 'Tegucigalpa', region: 'Francisco Morazán', note: 'Pastores de Jóvenes — Explosión Honduras' },
   { pastors: 'Jorge y Alicia de Zúniga', city: 'Santa Elena', region: 'Olancho' },
   { pastors: 'Juan y Sayda de Guerrero', city: 'San Manuel', region: 'Cortés' },
   { pastors: 'Antonio y Luz de Lanza', city: 'Valle de Ángeles', region: 'Francisco Morazán' },
@@ -73,33 +73,36 @@ const internationalChurches = [
 ]
 
 export default async function HomePage() {
-  const [liveVideos] = await Promise.all([getRecentVideos(8)])
-  const curatedVideos = CURATED_VIDEOS.map((v) => ({
-    videoId: v.id, title: v.title, pastor: v.pastor,
-    thumbnail: `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`,
-    url: `https://www.youtube.com/watch?v=${v.id}`,
-  }))
+  const [liveVideos] = await Promise.all([getRecentVideos(4)])
+  const liveVideoIds = new Set(liveVideos.map((v) => v.videoId))
+  const curatedVideos = CURATED_VIDEOS
+    .filter((v) => !liveVideoIds.has(v.id))
+    .map((v) => ({
+      videoId: v.id, title: v.title, pastor: v.pastor,
+      thumbnail: `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`,
+      url: `https://www.youtube.com/watch?v=${v.id}`,
+    }))
 
   return (
     <>
-      {/* 
+      {/*
           INICIO
        */}
-      <section id="inicio" className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-navy-deeper">
+      <section id="inicio" className="relative h-screen min-h-[600px] flex items-center overflow-hidden bg-navy-deeper">
         <HeroParallax />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy-deeper/80 via-navy-deeper/60 to-navy-deeper/90" />
-        <div className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto">
-          <p className="text-teal font-semibold tracking-[0.3em] text-sm md:text-base uppercase mb-4">
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-deeper/90 via-navy-deeper/50 to-transparent" />
+        <div className="relative z-10 text-white px-8 md:px-16 max-w-2xl">
+          <p className="text-teal font-semibold tracking-[0.3em] text-sm uppercase mb-4">
             Ministerio Internacional Ágape
           </p>
-          <h1 className="font-heading font-extrabold text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none mb-6">
+          <h1 className="font-heading font-extrabold text-5xl sm:text-6xl md:text-7xl leading-tight mb-6">
             EN ESTA CASA,<br />
             <span className="text-teal">CABEMOS</span> TODOS
           </h1>
-          <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-            Más de 26 años sirviendo a Honduras y las naciones. Bienvenido a tu nueva familia.
+          <p className="text-white/80 text-lg md:text-xl max-w-lg mb-10">
+            Muchos años sirviendo a Honduras y las naciones. Bienvenido a tu nueva familia.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4">
             <a href="#visita" className="btn-primary text-base px-10 py-4">Planifica tu visita</a>
             <a href="#mensajes" className="btn-secondary text-base px-10 py-4">Ver mensajes</a>
           </div>
@@ -161,7 +164,7 @@ export default async function HomePage() {
                 amor, transformación y servicio.
               </p>
               <p className="text-white/70 text-lg leading-relaxed mb-4">
-                Durante más de 26 años hemos preparado hombres y mujeres con el carácter para asumir la asignación
+                Por muchos años hemos preparado hombres y mujeres con el carácter para asumir la asignación
                 que Dios nos ha delegado, resultando en la apertura de once iglesias en Honduras, El Salvador y Panamá.
               </p>
               <p className="text-white/70 text-lg leading-relaxed">
@@ -191,18 +194,34 @@ export default async function HomePage() {
             <h2 className="section-title text-white">Nuestros pastores</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            {[
-              { name: 'Pastor Armando Medina', role: 'Pastor Principal', image: '/Pastor.png' },
-              { name: 'Pastora Gladis de Medina', role: 'Pastora Principal', image: '/Pastora.png' },
-            ].map((p, i) => (
-              <div key={i} className="text-center bg-white/5 rounded-3xl p-8">
-                <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden ring-4 ring-teal/30">
-                  <Image src={p.image} alt={p.name} fill className="object-cover object-top" />
-                </div>
-                <h3 className="font-heading font-bold text-white text-xl">{p.name}</h3>
-                <p className="text-teal font-semibold text-sm mt-1">{p.role}</p>
+            <div className="bg-white/5 rounded-3xl overflow-hidden border border-white/10">
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/Pastores /Armando y Gladis de Medina.jpeg"
+                  alt="Armando y Gladis de Medina"
+                  fill
+                  className="object-cover object-top"
+                />
               </div>
-            ))}
+              <div className="p-6 text-center">
+                <p className="text-teal font-semibold text-xs uppercase tracking-widest mb-1">Pastores Principales</p>
+                <h3 className="font-heading font-bold text-white text-xl">Armando y Gladis de Medina</h3>
+              </div>
+            </div>
+            <div className="bg-white/5 rounded-3xl overflow-hidden border border-white/10">
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/Pastores /Alejandro y Gabriela de Medina.jpeg"
+                  alt="Alejandro y Gabriela de Medina"
+                  fill
+                  className="object-cover object-top"
+                />
+              </div>
+              <div className="p-6 text-center">
+                <p className="text-teal font-semibold text-xs uppercase tracking-widest mb-1">Pastores Jóvenes — Explosión</p>
+                <h3 className="font-heading font-bold text-white text-xl">Alejandro y Gabriela de Medina</h3>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -221,8 +240,8 @@ export default async function HomePage() {
           {/* Horarios */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
             {[
-              { day: 'Martes', time: '6:30 p.m.', description: 'Servicio familiar entre semana' },
-              { day: 'Domingo', time: '8:00 a.m.', description: 'Servicio matutino' },
+              { day: 'Martes', time: '6:30 p.m.', description: 'Servicio principal' },
+              { day: 'Domingo', time: '8:00 a.m.', description: 'Servicio principal' },
               { day: 'Domingo', time: '9:40 a.m.', description: 'Servicio principal' },
               { day: 'Domingo', time: '11:30 a.m.', description: 'Servicio de jóvenes — Explosión' },
             ].map((s, i) => (
@@ -289,7 +308,7 @@ export default async function HomePage() {
             <h2 className="section-title text-white">Mensajes</h2>
           </div>
 
-          {/* Últimos mensajes RSS */}
+          {/* Últimos mensajes RSS — solo aparece cuando YouTube responde */}
           {liveVideos.length > 0 && (
             <div className="mb-16">
               <div className="flex items-end justify-between mb-8">
@@ -299,7 +318,7 @@ export default async function HomePage() {
                 </div>
                 <a href={YOUTUBE_CHANNEL} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex text-white font-semibold hover:text-teal transition-colors">Ver canal →</a>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {liveVideos.map((v) => (
                   <a key={v.videoId} href={v.url} target="_blank" rel="noopener noreferrer"
                     className="rounded-2xl overflow-hidden shadow-md card-hover block group bg-navy-deeper">
@@ -491,7 +510,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
             {hondurasChurches.map((c, i) => (
               <div key={i} className={`bg-white/10 border rounded-2xl p-5 hover:bg-white/15 transition-colors ${c.isMain ? 'border-teal' : 'border-white/20'}`}>
-                {c.isMain && <span className="inline-block bg-teal text-white text-xs font-bold px-2 py-0.5 rounded-full mb-2">Iglesia Madre</span>}
+                {c.isMain && <span className="inline-block bg-teal text-white text-xs font-bold px-2 py-0.5 rounded-full mb-2">Iglesia Central</span>}
                 {c.note && !c.isMain && <span className="inline-block bg-brand-purple text-white text-xs font-bold px-2 py-0.5 rounded-full mb-2">{c.note}</span>}
                 <h4 className="font-heading font-bold text-white text-base leading-snug">{c.pastors}</h4>
                 <p className="text-teal text-sm mt-1">{c.city}</p>

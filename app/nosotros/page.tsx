@@ -51,7 +51,7 @@ const pastors = [
   {
     name: 'Armando y Gladis de Medina',
     role: 'Pastores Fundadores',
-    bio: 'Fundaron el Ministerio Internacional Ágape el 5 de marzo de 1999. Han liderado la iglesia con amor, perseverancia y visión durante más de 26 años, impactando Honduras y las naciones.',
+    bio: 'Fundaron el Ministerio Internacional Ágape el 5 de marzo de 1999. Han liderado la iglesia con amor, perseverancia y visión durante muchos años, impactando Honduras y las naciones.',
     image:
       'https://images.unsplash.com/photo-1516912481808-3406841bd33c?q=80&w=400&h=400&fit=crop',
   },
@@ -96,7 +96,7 @@ export default function NosotrosPage() {
                 Nuestra Historia
               </p>
               <h2 className="section-title text-navy mb-6">
-                Más de 26 años sirviendo a Dios
+                Muchos años sirviendo a Dios
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed mb-5">
                 Ágape nació el{' '}
@@ -219,7 +219,7 @@ export default function NosotrosPage() {
           <blockquote className="text-white/80 text-xl md:text-2xl italic text-center leading-relaxed bg-white/5 rounded-2xl p-10 border border-white/10">
             &ldquo;Somos una iglesia que cree firmemente en la asignación que
             Jesús nos dio cuando dijo en su Palabra que fuéramos por el mundo e
-            hiciéramos discípulos. A lo largo de 26 años, nos hemos encargado
+            hiciéramos discípulos. A lo largo de muchos años, nos hemos encargado
             de expandir el mensaje del Señor, preparando hombres y mujeres con
             el carácter para asumir la asignación que Dios nos ha delegado.&rdquo;
           </blockquote>

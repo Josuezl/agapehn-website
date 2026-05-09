@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: '%s | Ministerio Internacional Ágape',
   },
   description:
-    'Ministerio Internacional Ágape — una iglesia cristiana con más de 26 años en Honduras. Servicios domingos y martes. "En esta casa, cabemos todos."',
+    'Ministerio Internacional Ágape — una iglesia cristiana en Honduras. Servicios domingos y martes. "En esta casa, cabemos todos."',
   keywords: [
     'iglesia',
     'Honduras',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     siteName: 'Ministerio Internacional Ágape',
     title: 'Ministerio Internacional Ágape | En esta casa, cabemos todos',
     description:
-      'Una iglesia que te da la bienvenida con los brazos abiertos. Más de 26 años sirviendo a Honduras y las naciones.',
+      'Una iglesia que te da la bienvenida con los brazos abiertos. Muchos años sirviendo a Honduras y las naciones.',
     images: [
       {
         url: 'https://images.unsplash.com/photo-1438232992991-995b7058bdb3?q=80&w=1200',

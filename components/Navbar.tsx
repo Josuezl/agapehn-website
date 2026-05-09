@@ -64,7 +64,7 @@ export default function Navbar() {
           <nav className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <a href="#inicio" className="flex items-center gap-2 flex-shrink-0">
-              <Logo className="h-9 md:h-11 w-auto text-white" />
+              <Logo color="white" />
             </a>
 
             {/* Desktop nav */}

@@ -155,7 +155,7 @@ export default function IglesiasPage() {
             discípulos.
           </p>
           <p className="text-gray-600 text-lg leading-relaxed">
-            A lo largo de 26 años, hemos preparado hombres y mujeres con el
+            A lo largo de muchos años, hemos preparado hombres y mujeres con el
             carácter para asumir la asignación que Dios nos ha delegado,
             resultando en la apertura de once iglesias: nueve a lo largo del
             territorio nacional y dos en territorio internacional.

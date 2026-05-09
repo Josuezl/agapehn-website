@@ -7,7 +7,7 @@ export interface YouTubeVideo {
   url: string
 }
 
-const CHANNEL_ID = 'UCg16e-vM_wlk2Jk9ix5mHLQ'
+const CHANNEL_ID = 'UCMiiQSq1A9LSFl5C2t_dlPw'
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
 
 const MONTHS_ES = [
@@ -33,7 +33,7 @@ function decodeXmlEntities(str: string): string {
 export async function getRecentVideos(count = 6): Promise<YouTubeVideo[]> {
   try {
     const res = await fetch(RSS_URL, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
       headers: { Accept: 'application/xml, text/xml, */*' },
     })
     if (!res.ok) return []
@@ -41,20 +41,30 @@ export async function getRecentVideos(count = 6): Promise<YouTubeVideo[]> {
     const xml = await res.text()
     const entries = xml.split('<entry>').slice(1)
 
-    return entries.slice(0, count).map((entry) => {
+    const seen = new Set<string>()
+    const videos: YouTubeVideo[] = []
+
+    for (const entry of entries) {
       const videoId = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1] ?? ''
+      if (!videoId || seen.has(videoId)) continue
+      seen.add(videoId)
+
       const rawTitle = entry.match(/<title>([^<]+)<\/title>/)?.[1] ?? ''
       const published = entry.match(/<published>([^<]+)<\/published>/)?.[1] ?? ''
 
-      return {
+      videos.push({
         videoId,
         title: decodeXmlEntities(rawTitle),
         publishedAt: published,
         publishedFormatted: formatDate(published),
         thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
         url: `https://www.youtube.com/watch?v=${videoId}`,
-      }
-    })
+      })
+
+      if (videos.length === count) break
+    }
+
+    return videos
   } catch {
     return []
   }
