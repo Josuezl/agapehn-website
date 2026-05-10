@@ -26,7 +26,7 @@ const CURATED_VIDEOS = [
 const doctrinas = [
   { title: 'La Biblia', text: 'Creemos que la Biblia es la Palabra de Dios, inspirada, infalible y la autoridad final en fe y conducta.' },
   { title: 'La Trinidad', text: 'Creemos en un solo Dios eterno que existe en tres personas: Padre, Hijo y Espíritu Santo.' },
-  { title: 'Salvación', text: 'Creemos que la salvación es por gracia mediante la fe en Jesucristo, quien murió y resucitó por nuestros pecados.' },
+  { title: 'La Salvación', text: 'Creemos que la salvación es por gracia mediante la fe en Jesucristo, quien murió y resucitó por nuestros pecados.' },
   { title: 'El Espíritu Santo', text: 'Creemos en el bautismo del Espíritu Santo y en los dones del Espíritu para el creyente de hoy.' },
   { title: 'La Iglesia', text: 'Creemos que la iglesia es el cuerpo de Cristo, llamada a hacer discípulos en todas las naciones.' },
   { title: 'La Segunda Venida', text: 'Creemos en el regreso literal y glorioso de Jesucristo para establecer su reino eterno.' },
@@ -41,6 +41,15 @@ const expectations = [
   { title: 'Info', description: 'Listo para responder todas tus preguntas y orientarte en tu primera visita.' },
 ]
 
+const currentEvent = {
+  label: 'Conferencia',
+  title: 'Incondicional 2026',
+  description: 'Una conferencia que marcará generaciones. Pastores internacionales reunidos para ministrar en un mismo lugar. ¡Ven y sé parte de algo histórico!',
+  date: 'Viernes 12 & Sábado 13 de junio · Salón de la Fuerza Aérea de Honduras',
+  image: '/Eventos/684082738_18349904152300744_797280196455391124_n.jpg',
+  formUrl: '#',
+}
+
 const mainMinistries = [
   { name: 'Ágape Ora', description: 'Devocional transmitido por Facebook Live los lunes, miércoles y viernes a las 5:00 a.m.', schedule: 'Lun · Mié · Vie — 5:00 a.m.' },
   { name: 'Evangelismo', description: 'Promueve y esparce a todo individuo el mensaje de salvación, paz y justicia de Cristo Jesús.', schedule: 'Salidas semanales' },
@@ -53,6 +62,8 @@ const communityMinistries = [
   { name: 'Explosión', description: 'El ministerio juvenil. Domingos a las 11:30 a.m.', tag: 'Jóvenes', logo: '/Logos/Explosion.png' },
   { name: 'Agape Kids', description: 'Formamos a los niños en el conocimiento de la Palabra de Dios.', tag: 'Niños', logo: '/Logos/Agape Kids.png' },
   { name: 'Grupos en Casa', description: 'Familias que abren su hogar para compartir el evangelio.', tag: 'Comunidad', logo: '/Logos/Grupos en casa .png' },
+  { name: 'Agape Worship', description: 'Guía al pueblo en la alabanza y adoración a Dios. Escucha nuestra música en plataformas digitales.', tag: 'Música', logo: '/Logos/Agape Worship.png' },
+  { name: 'Ágape Ora', description: 'Devocional transmitido por Facebook Live los lunes, miércoles y viernes a las 5:00 a.m.', tag: 'Oración', logo: '/Logos/Agape Ora.png' },
 ]
 
 const hondurasChurches = [
@@ -88,10 +99,10 @@ export default async function HomePage() {
       {/*
           INICIO
        */}
-      <section id="inicio" className="relative h-screen min-h-[600px] flex items-center overflow-hidden bg-navy-deeper">
+      <section id="inicio" className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-navy-deeper">
         <HeroParallax />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-deeper/90 via-navy-deeper/50 to-transparent" />
-        <div className="relative z-10 text-white px-8 md:px-16 max-w-2xl">
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-deeper/80 via-navy-deeper/60 to-navy-deeper/90" />
+        <div className="relative z-10 text-white text-center px-4 max-w-4xl mx-auto">
           <p className="text-teal font-semibold tracking-[0.3em] text-sm uppercase mb-4">
             Ministerio Internacional Ágape
           </p>
@@ -99,12 +110,12 @@ export default async function HomePage() {
             EN ESTA CASA,<br />
             <span className="text-teal">CABEMOS</span> TODOS
           </h1>
-          <p className="text-white/80 text-lg md:text-xl max-w-lg mb-10">
-            Muchos años sirviendo a Honduras y las naciones. Bienvenido a tu nueva familia.
+          <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+            Más que un nombre, amor de Dios. Bienvenido a tu nueva familia.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#visita" className="btn-primary text-base px-10 py-4">Planifica tu visita</a>
-            <a href="#mensajes" className="btn-secondary text-base px-10 py-4">Ver mensajes</a>
+            <a href="#evento" className="btn-secondary text-base px-10 py-4">Eventos</a>
           </div>
         </div>
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
@@ -149,10 +160,6 @@ export default async function HomePage() {
             <div className="relative">
               <div className="aspect-[4/3] relative rounded-2xl overflow-hidden shadow-2xl">
                 <Image src="/Imagen 1.jpg" alt="Comunidad Ágape" fill className="object-cover object-top" />
-              </div>
-              <div className="absolute -bottom-6 -right-6 bg-teal text-white p-5 rounded-2xl shadow-xl hidden md:block">
-                <p className="font-bold text-3xl">26+</p>
-                <p className="text-sm font-medium">años de historia</p>
               </div>
             </div>
             <div>
@@ -200,7 +207,8 @@ export default async function HomePage() {
                   src="/Pastores /Armando y Gladis de Medina.jpeg"
                   alt="Armando y Gladis de Medina"
                   fill
-                  className="object-cover object-top"
+                  className="object-cover"
+                  style={{ objectPosition: 'center 35%' }}
                 />
               </div>
               <div className="p-6 text-center">
@@ -214,11 +222,12 @@ export default async function HomePage() {
                   src="/Pastores /Alejandro y Gabriela de Medina.jpeg"
                   alt="Alejandro y Gabriela de Medina"
                   fill
-                  className="object-cover object-top"
+                  className="object-cover"
+                  style={{ objectPosition: 'center 15%' }}
                 />
               </div>
               <div className="p-6 text-center">
-                <p className="text-teal font-semibold text-xs uppercase tracking-widest mb-1">Pastores Jóvenes — Explosión</p>
+                <p className="text-teal font-semibold text-xs uppercase tracking-widest mb-1">Pastores de Jóvenes</p>
                 <h3 className="font-heading font-bold text-white text-xl">Alejandro y Gabriela de Medina</h3>
               </div>
             </div>
@@ -226,7 +235,52 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 
+      {/*
+          EVENTO ACTUAL
+       */}
+      <section id="evento" className="py-20 bg-white">
+        <div className="container-custom">
+          <div className="text-center mb-10">
+            <p className="text-teal font-bold text-xs uppercase tracking-[0.25em] mb-3">Próximo evento</p>
+            <h2 className="font-heading font-extrabold text-3xl md:text-4xl text-navy">
+              Regístrate a nuestro próximo evento
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 rounded-3xl overflow-hidden shadow-xl border border-gray-100 min-h-[480px]">
+            {/* Imagen izquierda */}
+            <div className="relative min-h-[360px] lg:min-h-full">
+              <Image
+                src={currentEvent.image}
+                alt={currentEvent.title}
+                fill
+                className="object-cover"
+                style={{ objectPosition: 'center 20%' }}
+              />
+            </div>
+            {/* Contenido derecha */}
+            <div className="bg-white p-10 lg:p-14 flex flex-col justify-center">
+              <p className="text-teal font-bold text-xs uppercase tracking-[0.25em] mb-4">{currentEvent.label}</p>
+              <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-navy mb-4 leading-tight">
+                {currentEvent.title}
+              </h2>
+              <p className="text-gray-600 text-base leading-relaxed mb-5">{currentEvent.description}</p>
+              {currentEvent.date && (
+                <p className="text-gray-400 text-sm mb-8">{currentEvent.date}</p>
+              )}
+              <a
+                href={currentEvent.formUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 self-start px-8 py-3.5 bg-navy text-white font-bold rounded-full hover:bg-navy-dark transition-colors text-base"
+              >
+                Registrarme →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/*
           VISITA
        */}
       <section id="visita" className="py-24 bg-navy">
@@ -287,12 +341,16 @@ export default async function HomePage() {
                 </p>
               </div>
             </div>
-            <div className="h-72 bg-white/10 rounded-2xl overflow-hidden flex items-center justify-center">
-              <div className="text-center text-white/40">
-                <p className="text-4xl mb-2"></p>
-                <p className="font-semibold">Mapa de ubicación</p>
-                <p className="text-sm">Tegucigalpa, Honduras</p>
-              </div>
+            <div className="h-72 rounded-2xl overflow-hidden">
+              <iframe
+                src="https://maps.google.com/maps?q=14.094626079408233,-87.15844262391437&z=16&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
         </div>
@@ -313,8 +371,8 @@ export default async function HomePage() {
             <div className="mb-16">
               <div className="flex items-end justify-between mb-8">
                 <div>
-                  <p className="text-teal font-semibold tracking-widest text-sm uppercase mb-2">En vivo y recientes</p>
-                  <h3 className="font-heading font-bold text-3xl text-white">Últimos mensajes</h3>
+                  <p className="text-teal font-semibold tracking-widest text-sm uppercase mb-2">YouTube</p>
+                  <h3 className="font-heading font-bold text-3xl text-white">Últimos videos de nuestro canal</h3>
                 </div>
                 <a href={YOUTUBE_CHANNEL} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex text-white font-semibold hover:text-teal transition-colors">Ver canal →</a>
               </div>
@@ -401,6 +459,11 @@ export default async function HomePage() {
                 className="w-11 h-11 rounded-full bg-red-600 hover:bg-red-700 flex items-center justify-center transition-colors">
                 <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
               </a>
+              <a href="https://music.youtube.com/channel/UCEHvWs5wI4YK1RedypElejA" target="_blank" rel="noopener noreferrer"
+                className="w-11 h-11 rounded-full flex items-center justify-center hover:opacity-90 transition-opacity"
+                style={{ background: 'linear-gradient(135deg, #ff0000, #cc0000)' }}>
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6zm-2 16a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
+              </a>
             </div>
           </div>
         </div>
@@ -461,11 +524,15 @@ export default async function HomePage() {
             <p className="text-teal font-semibold tracking-widest text-sm uppercase mb-3">Conéctate</p>
             <h3 className="font-heading font-bold text-3xl text-white">Encuentra tu comunidad</h3>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {communityMinistries.map((m, i) => (
               <div key={i} className="bg-white/10 p-6 rounded-2xl transition-shadow border border-white/10 flex flex-col items-center text-center">
                 <div className="my-4 h-32 flex items-center justify-center">
-                  <Image src={m.logo} alt={m.name} width={128} height={128} className="h-32 object-contain" style={{ width: 'auto' }} />
+                  {m.logo ? (
+                    <Image src={m.logo} alt={m.name} width={128} height={128} className="h-32 object-contain" style={{ width: 'auto' }} />
+                  ) : (
+                    <p className="font-heading font-bold text-white text-2xl">{m.name}</p>
+                  )}
                 </div>
                 <p className="text-white/70 text-sm leading-relaxed">{m.description}</p>
               </div>
@@ -549,6 +616,39 @@ export default async function HomePage() {
             &ldquo;Padre Celestial, en este día entrego mi vida a ti, ya no quiero ser esclavo del mundo, sino un hijo(a) lavado(a) por tu preciosa sangre. Reconozco que he fallado, pero hoy te recibo y te acepto como mi Salvador, amén.&rdquo;
           </blockquote>
           <p className="text-white/40 text-sm">&ldquo;Dios es bueno. Dios es fiel.&rdquo;</p>
+        </div>
+      </section>
+
+      {/* Donar */}
+      <section id="donar" className="py-24 bg-navy-deeper relative overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/Imagen 1.jpg"
+            alt="Comunidad Ágape"
+            fill
+            className="object-cover object-top opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-navy-deeper/60 to-navy-deeper/90" />
+        </div>
+        <div className="container-custom relative z-10 max-w-3xl text-center">
+          <p className="text-teal font-bold text-xs uppercase tracking-[0.25em] mb-4">Generosidad</p>
+          <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-white mb-6">
+            ¡Gracias por tu generosidad!
+          </h2>
+          <p className="text-white/70 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
+            Tus contribuciones no solo respaldan las operaciones de la iglesia, sino que además
+            nos permiten mantenernos firmes en las comunidades, a través de ayuda social,
+            contribuciones a familias y brigadas de salud. Gracias por respaldar la labor
+            evangelizadora, dentro y fuera de nuestra nación.
+          </p>
+          <a
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-12 py-4 bg-teal text-navy font-bold rounded-full hover:bg-teal/90 transition-colors text-lg shadow-lg"
+          >
+            Donar ahora
+          </a>
         </div>
       </section>
 

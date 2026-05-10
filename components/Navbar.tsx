@@ -12,6 +12,7 @@ const navLinks = [
   { href: '#galeria', label: 'Galería' },
   { href: '#ministerios', label: 'Ministerios' },
   { href: '#iglesias', label: 'Iglesias' },
+  { href: '#donar', label: 'Donar' },
 ]
 
 export default function Navbar() {
