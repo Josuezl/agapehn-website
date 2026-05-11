@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { getRecentVideos } from '@/lib/youtube'
+import { getRecentStreams } from '@/lib/youtube'
 import HeroParallax from '@/components/HeroParallax'
 
 export const revalidate = 3600
@@ -84,7 +84,7 @@ const internationalChurches = [
 ]
 
 export default async function HomePage() {
-  const [liveVideos] = await Promise.all([getRecentVideos(4)])
+  const [liveVideos] = await Promise.all([getRecentStreams(4)])
   const liveVideoIds = new Set(liveVideos.map((v) => v.videoId))
   const curatedVideos = CURATED_VIDEOS
     .filter((v) => !liveVideoIds.has(v.id))

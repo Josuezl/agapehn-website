@@ -30,6 +30,61 @@ function decodeXmlEntities(str: string): string {
     .replace(/&quot;/g, '"')
 }
 
+const STREAMS_URL = 'https://www.youtube.com/@ministeriointernacionalaga1060/streams'
+
+export async function getRecentStreams(count = 4): Promise<YouTubeVideo[]> {
+  try {
+    const res = await fetch(STREAMS_URL, {
+      next: { revalidate: 3600 },
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; bot)' },
+    })
+    if (!res.ok) return []
+
+    const html = await res.text()
+
+    // Extract unique video IDs from page JSON
+    const seen = new Set<string>()
+    const ids: string[] = []
+    for (const match of html.matchAll(/"videoId":"([^"]{11})"/g)) {
+      const id = match[1]
+      if (!seen.has(id)) {
+        seen.add(id)
+        ids.push(id)
+      }
+      if (ids.length === count) break
+    }
+
+    if (ids.length === 0) return []
+
+    // Fetch titles via oEmbed in parallel
+    const videos = await Promise.all(
+      ids.map(async (videoId) => {
+        try {
+          const oe = await fetch(
+            `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
+            { next: { revalidate: 3600 } }
+          )
+          const data = oe.ok ? await oe.json() : {}
+          return {
+            videoId,
+            title: data.title ?? '',
+            publishedAt: '',
+            publishedFormatted: '',
+            thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+            url: `https://www.youtube.com/watch?v=${videoId}`,
+          } as YouTubeVideo
+        } catch {
+          return null
+        }
+      })
+    )
+
+    return videos.filter(Boolean) as YouTubeVideo[]
+  } catch {
+    return []
+  }
+}
+
 export async function getRecentVideos(count = 6): Promise<YouTubeVideo[]> {
   try {
     const res = await fetch(RSS_URL, {
