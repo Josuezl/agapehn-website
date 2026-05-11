@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { getRecentStreams } from '@/lib/youtube'
+import { getRecentStreams, getRecentUploads } from '@/lib/youtube'
 import HeroParallax from '@/components/HeroParallax'
 
 export const revalidate = 3600
@@ -12,16 +12,6 @@ export const metadata: Metadata = {
 
 const YOUTUBE_CHANNEL = 'https://www.youtube.com/@ministeriointernacionalaga1060/videos'
 
-const CURATED_VIDEOS = [
-  { id: 'Fe0oPyArinI', title: 'Jesús resucitó', pastor: 'Ps. Armando Medina' },
-  { id: 'WrJlD9OIzOM', title: 'Integridad', pastor: 'Ps. Armando Medina' },
-  { id: '04vPinRcQQs', title: 'Integridad', pastor: 'Ps. Alejandro Medina' },
-  { id: '1Cv2vrNEMR4', title: 'Manifestaciones del reino', pastor: 'Ps. Armando Medina' },
-  { id: 'CBPYjwpifr8', title: 'DÚNAMIS', pastor: 'Ps. Armando Medina' },
-  { id: 'Pq9uW3_GMU4', title: 'El Poder de la Expectativa', pastor: 'Ps. Armando Medina' },
-  { id: '2ZM9PWh09l8', title: 'La paradoja del reino', pastor: 'Ps. Gladis de Medina' },
-  { id: 'BqmdtTBptS8', title: 'La paradoja del reino', pastor: 'Ps. Armando Medina' },
-]
 
 const doctrinas = [
   { title: 'La Biblia', text: 'Creemos que la Biblia es la Palabra de Dios, inspirada, infalible y la autoridad final en fe y conducta.' },
@@ -84,15 +74,10 @@ const internationalChurches = [
 ]
 
 export default async function HomePage() {
-  const [liveVideos] = await Promise.all([getRecentStreams(4)])
-  const liveVideoIds = new Set(liveVideos.map((v) => v.videoId))
-  const curatedVideos = CURATED_VIDEOS
-    .filter((v) => !liveVideoIds.has(v.id))
-    .map((v) => ({
-      videoId: v.id, title: v.title, pastor: v.pastor,
-      thumbnail: `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`,
-      url: `https://www.youtube.com/watch?v=${v.id}`,
-    }))
+  const [liveVideos, uploadedVideos] = await Promise.all([
+    getRecentStreams(4),
+    getRecentUploads(4),
+  ])
 
   return (
     <>
@@ -399,7 +384,8 @@ export default async function HomePage() {
             </div>
           )}
 
-          {/* Serie de mensajes curada */}
+          {/* Últimos videos subidos */}
+          {uploadedVideos.length > 0 && (
           <div>
             <div className="flex items-end justify-between mb-8">
               <div>
@@ -409,7 +395,7 @@ export default async function HomePage() {
               <a href={YOUTUBE_CHANNEL} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex text-white font-semibold hover:text-teal transition-colors">Ver todos →</a>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {curatedVideos.map((video) => (
+              {uploadedVideos.map((video) => (
                 <a key={video.videoId} href={video.url} target="_blank" rel="noopener noreferrer"
                   className="bg-white/10 rounded-2xl overflow-hidden border border-white/10 card-hover group block">
                   <div className="relative aspect-video bg-navy-deeper">
@@ -422,7 +408,6 @@ export default async function HomePage() {
                   </div>
                   <div className="p-4">
                     <h4 className="font-heading font-bold text-white text-base leading-snug mb-1 line-clamp-2">{video.title}</h4>
-                    <p className="text-sm text-white/60">{video.pastor}</p>
                   </div>
                 </a>
               ))}
@@ -435,6 +420,7 @@ export default async function HomePage() {
               </a>
             </div>
           </div>
+          )}
         </div>
       </section>
 

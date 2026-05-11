@@ -9,6 +9,8 @@ export interface YouTubeVideo {
 
 const CHANNEL_ID = 'UCMiiQSq1A9LSFl5C2t_dlPw'
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
+const STREAMS_URL = 'https://www.youtube.com/@ministeriointernacionalaga1060/streams'
+const VIDEOS_URL = 'https://www.youtube.com/@ministeriointernacionalaga1060/videos'
 
 const MONTHS_ES = [
   'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
@@ -30,56 +32,63 @@ function decodeXmlEntities(str: string): string {
     .replace(/&quot;/g, '"')
 }
 
-const STREAMS_URL = 'https://www.youtube.com/@ministeriointernacionalaga1060/streams'
+async function scrapeYouTubePage(url: string, count: number): Promise<YouTubeVideo[]> {
+  const res = await fetch(url, {
+    next: { revalidate: 3600 },
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; bot)' },
+  })
+  if (!res.ok) return []
+
+  const html = await res.text()
+  const seen = new Set<string>()
+  const ids: string[] = []
+  for (const match of html.matchAll(/"videoId":"([^"]{11})"/g)) {
+    const id = match[1]
+    if (!seen.has(id)) {
+      seen.add(id)
+      ids.push(id)
+    }
+    if (ids.length === count) break
+  }
+
+  if (ids.length === 0) return []
+
+  const videos = await Promise.all(
+    ids.map(async (videoId) => {
+      try {
+        const oe = await fetch(
+          `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
+          { next: { revalidate: 3600 } }
+        )
+        const data = oe.ok ? await oe.json() : {}
+        return {
+          videoId,
+          title: data.title ?? '',
+          publishedAt: '',
+          publishedFormatted: '',
+          thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+          url: `https://www.youtube.com/watch?v=${videoId}`,
+        } as YouTubeVideo
+      } catch {
+        return null
+      }
+    })
+  )
+
+  return videos.filter(Boolean) as YouTubeVideo[]
+}
 
 export async function getRecentStreams(count = 4): Promise<YouTubeVideo[]> {
   try {
-    const res = await fetch(STREAMS_URL, {
-      next: { revalidate: 3600 },
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; bot)' },
-    })
-    if (!res.ok) return []
+    return await scrapeYouTubePage(STREAMS_URL, count)
+  } catch {
+    return []
+  }
+}
 
-    const html = await res.text()
-
-    // Extract unique video IDs from page JSON
-    const seen = new Set<string>()
-    const ids: string[] = []
-    for (const match of html.matchAll(/"videoId":"([^"]{11})"/g)) {
-      const id = match[1]
-      if (!seen.has(id)) {
-        seen.add(id)
-        ids.push(id)
-      }
-      if (ids.length === count) break
-    }
-
-    if (ids.length === 0) return []
-
-    // Fetch titles via oEmbed in parallel
-    const videos = await Promise.all(
-      ids.map(async (videoId) => {
-        try {
-          const oe = await fetch(
-            `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
-            { next: { revalidate: 3600 } }
-          )
-          const data = oe.ok ? await oe.json() : {}
-          return {
-            videoId,
-            title: data.title ?? '',
-            publishedAt: '',
-            publishedFormatted: '',
-            thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-            url: `https://www.youtube.com/watch?v=${videoId}`,
-          } as YouTubeVideo
-        } catch {
-          return null
-        }
-      })
-    )
-
-    return videos.filter(Boolean) as YouTubeVideo[]
+export async function getRecentUploads(count = 4): Promise<YouTubeVideo[]> {
+  try {
+    return await scrapeYouTubePage(VIDEOS_URL, count)
   } catch {
     return []
   }
