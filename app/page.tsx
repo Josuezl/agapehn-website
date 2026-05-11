@@ -76,7 +76,7 @@ const internationalChurches = [
 export default async function HomePage() {
   const [liveVideos, uploadedVideos] = await Promise.all([
     getRecentStreams(4),
-    getRecentUploads(4),
+    getRecentUploads(8),
   ])
 
   return (
@@ -357,26 +357,24 @@ export default async function HomePage() {
               <div className="flex items-end justify-between mb-8">
                 <div>
                   <p className="text-teal font-semibold tracking-widest text-sm uppercase mb-2">YouTube</p>
-                  <h3 className="font-heading font-bold text-3xl text-white">Últimos videos de nuestro canal</h3>
+                  <h3 className="font-heading font-bold text-3xl text-white">Últimas Transmisiones en Vivo</h3>
                 </div>
                 <a href={YOUTUBE_CHANNEL} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex text-white font-semibold hover:text-teal transition-colors">Ver canal →</a>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {liveVideos.map((v) => (
                   <a key={v.videoId} href={v.url} target="_blank" rel="noopener noreferrer"
-                    className="rounded-2xl overflow-hidden shadow-md card-hover block group bg-navy-deeper">
-                    <div className="relative aspect-video">
+                    className="bg-white/10 rounded-2xl overflow-hidden border border-white/10 card-hover group block">
+                    <div className="relative aspect-video bg-navy-deeper">
                       <Image src={v.thumbnail} alt={v.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent" />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
-                          <svg className="w-5 h-5 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                      <div className="absolute inset-0 bg-navy/10 group-hover:bg-navy/40 transition-colors flex items-center justify-center">
+                        <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                          <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                         </div>
                       </div>
-                      <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                        <p className="font-heading font-bold text-sm leading-snug line-clamp-2">{v.title}</p>
-                        <p className="text-white/60 text-xs mt-1">{v.publishedFormatted}</p>
-                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h4 className="font-heading font-bold text-white text-base leading-snug mb-1 line-clamp-2">{v.title}</h4>
                     </div>
                   </a>
                 ))}
@@ -394,7 +392,7 @@ export default async function HomePage() {
               </div>
               <a href={YOUTUBE_CHANNEL} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex text-white font-semibold hover:text-teal transition-colors">Ver todos →</a>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:grid-rows-2">
               {uploadedVideos.map((video) => (
                 <a key={video.videoId} href={video.url} target="_blank" rel="noopener noreferrer"
                   className="bg-white/10 rounded-2xl overflow-hidden border border-white/10 card-hover group block">
