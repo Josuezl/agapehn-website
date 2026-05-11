@@ -42,7 +42,9 @@ async function scrapeYouTubePage(url: string, count: number): Promise<YouTubeVid
   const html = await res.text()
   const seen = new Set<string>()
   const ids: string[] = []
-  for (const match of html.matchAll(/"videoId":"([^"]{11})"/g)) {
+  const re = /"videoId":"([^"]{11})"/g
+  let match: RegExpExecArray | null
+  while ((match = re.exec(html)) !== null) {
     const id = match[1]
     if (!seen.has(id)) {
       seen.add(id)
