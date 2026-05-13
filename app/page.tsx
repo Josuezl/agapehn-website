@@ -37,7 +37,7 @@ const currentEvent = {
   description: 'Una conferencia que marcará generaciones. Pastores internacionales reunidos para ministrar en un mismo lugar. ¡Ven y sé parte de algo histórico!',
   date: 'Viernes 12 & Sábado 13 de junio · Salón de la Fuerza Aérea de Honduras',
   image: '/Eventos/684082738_18349904152300744_797280196455391124_n.jpg',
-  formUrl: '#',
+  formUrl: 'https://forms.gle/13QRrAeG1F3z9wkg7',
 }
 
 const mainMinistries = [
@@ -626,7 +626,7 @@ export default async function HomePage() {
             evangelizadora, dentro y fuera de nuestra nación.
           </p>
           <a
-            href="#"
+            href="https://www.paypal.com/paypalme/agapehn"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 px-12 py-4 bg-teal text-navy font-bold rounded-full hover:bg-teal/90 transition-colors text-lg shadow-lg"
