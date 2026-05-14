@@ -36,11 +36,13 @@ export default function HeroParallax() {
   return (
     <div ref={containerRef} className="absolute inset-0 scale-110 origin-top">
       <Image
-        src="/hero-bg.png"
+        src="/hero1.jpeg"
         alt="Ministerio Internacional Ágape"
         fill
         className="object-cover object-center"
         priority
+        quality={100}
+        sizes="100vw"
         style={{ opacity: videoReady ? 0 : 1, transition: 'opacity 1.2s ease-in-out' }}
       />
       <video
