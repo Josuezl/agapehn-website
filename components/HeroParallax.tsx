@@ -1,12 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
+import { useEffect, useRef } from 'react'
 
 export default function HeroParallax() {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,30 +19,15 @@ export default function HeroParallax() {
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
-    const markReady = () => {
-      setVideoReady(true)
-      video.play().catch(() => {})
-    }
     if (video.readyState >= 2) {
-      markReady()
+      video.play().catch(() => {})
       return
     }
-    video.addEventListener('canplay', markReady)
-    return () => video.removeEventListener('canplay', markReady)
+    video.addEventListener('canplay', () => video.play().catch(() => {}), { once: true })
   }, [])
 
   return (
     <div ref={containerRef} className="absolute inset-0 scale-110 origin-top">
-      <Image
-        src="/hero1.jpeg"
-        alt="Ministerio Internacional Ágape"
-        fill
-        className="object-cover object-center"
-        priority
-        quality={100}
-        sizes="100vw"
-        style={{ opacity: videoReady ? 0 : 1, transition: 'opacity 1.2s ease-in-out' }}
-      />
       <video
         ref={videoRef}
         autoPlay
@@ -53,7 +36,6 @@ export default function HeroParallax() {
         playsInline
         preload="auto"
         className="absolute inset-0 w-full h-full object-cover object-center"
-        style={{ opacity: videoReady ? 1 : 0, transition: 'opacity 1.2s ease-in-out' }}
       >
         <source src="/Video/hero.mp4" type="video/mp4" />
       </video>
