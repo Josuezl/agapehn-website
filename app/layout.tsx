@@ -41,7 +41,7 @@ export const metadata: Metadata = {
       'Una iglesia que te da la bienvenida con los brazos abiertos. Muchos años sirviendo a Honduras y las naciones.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1438232992991-995b7058bdb3?q=80&w=1200',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Ministerio Internacional Ágape',
