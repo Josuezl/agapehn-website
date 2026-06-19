@@ -32,12 +32,12 @@ const expectations = [
 ]
 
 const currentEvent = {
-  label: 'Conferencia',
-  title: 'Incondicional 2026',
-  description: 'Una conferencia que marcará generaciones. Pastores internacionales reunidos para ministrar en un mismo lugar. ¡Ven y sé parte de algo histórico!',
-  date: 'Viernes 12 & Sábado 13 de junio · Salón de la Fuerza Aérea de Honduras',
-  image: '/Eventos/684082738_18349904152300744_797280196455391124_n.jpg',
-  formUrl: 'https://forms.gle/13QRrAeG1F3z9wkg7',
+  label: 'Próximo Evento',
+  title: 'Próximamente',
+  description: 'Espera nuestro próximo evento pronto. Mantente pendiente de nuestras redes sociales para más información.',
+  date: '',
+  image: '/Eventos/proximo_evento.png',
+  formUrl: '',
 }
 
 const mainMinistries = [
@@ -228,7 +228,7 @@ export default async function HomePage() {
           <div className="text-center mb-10">
             <p className="text-teal font-bold text-xs uppercase tracking-[0.25em] mb-3">Próximo evento</p>
             <h2 className="font-heading font-extrabold text-3xl md:text-4xl text-navy">
-              Regístrate a nuestro próximo evento
+              Mantente pendiente de nuestro próximo evento
             </h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 rounded-3xl overflow-hidden shadow-xl border border-gray-100 min-h-[480px]">
@@ -252,14 +252,16 @@ export default async function HomePage() {
               {currentEvent.date && (
                 <p className="text-gray-400 text-sm mb-8">{currentEvent.date}</p>
               )}
-              <a
-                href={currentEvent.formUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 self-start px-8 py-3.5 bg-navy text-white font-bold rounded-full hover:bg-navy-dark transition-colors text-base"
-              >
-                Registrarme →
-              </a>
+              {currentEvent.formUrl && (
+                <a
+                  href={currentEvent.formUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 self-start px-8 py-3.5 bg-navy text-white font-bold rounded-full hover:bg-navy-dark transition-colors text-base"
+                >
+                  Registrarme →
+                </a>
+              )}
             </div>
           </div>
         </div>
