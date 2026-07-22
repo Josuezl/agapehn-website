@@ -34,7 +34,6 @@ function decodeXmlEntities(str: string): string {
 
 async function scrapeYouTubePage(url: string, count: number): Promise<YouTubeVideo[]> {
   const res = await fetch(url, {
-    next: { revalidate: 3600 },
     headers: { 'User-Agent': 'Mozilla/5.0 (compatible; bot)' },
   })
   if (!res.ok) return []
@@ -59,8 +58,7 @@ async function scrapeYouTubePage(url: string, count: number): Promise<YouTubeVid
     ids.map(async (videoId) => {
       try {
         const oe = await fetch(
-          `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
-          { next: { revalidate: 3600 } }
+          `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`
         )
         const data = oe.ok ? await oe.json() : {}
         return {
@@ -99,7 +97,6 @@ export async function getRecentUploads(count = 4): Promise<YouTubeVideo[]> {
 export async function getRecentVideos(count = 6): Promise<YouTubeVideo[]> {
   try {
     const res = await fetch(RSS_URL, {
-      next: { revalidate: 3600 },
       headers: { Accept: 'application/xml, text/xml, */*' },
     })
     if (!res.ok) return []

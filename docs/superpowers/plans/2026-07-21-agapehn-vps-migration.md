@@ -4,7 +4,7 @@
 
 **Goal:** Move `agapehn.org` from Vercel to the DigitalOcean VPS with an atomic static deployment, hourly YouTube content refreshes, HTTPS, health checks, and a reversible DNS cutover.
 
-**Architecture:** GitHub Actions builds a Next.js static export and publishes only `out/` to `/srv/www/agapehn/releases/$GITHUB_SHA`. Nginx serves the atomic `current` symlink, while a repository-specific `deploy-agape` account and SSH key isolate deployment access. An hourly scheduled workflow rebuilds the site so YouTube-derived content remains fresh without running Node.js on the 1 GB VPS.
+**Architecture:** GitHub Actions builds a Next.js static export and publishes only `out/` to `/srv/www/agapehn/releases/$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT`. Nginx serves the atomic `current` symlink, while a repository-specific `deploy-agape` account and SSH key isolate deployment access. An hourly scheduled workflow rebuilds the site so YouTube-derived content remains fresh without running Node.js on the 1 GB VPS.
 
 **Tech Stack:** Next.js 14 App Router, TypeScript, GitHub Actions, OpenSSH, Nginx, Certbot, Ubuntu 24.04.
 
@@ -18,6 +18,7 @@
 - Keep the Vercel project available until HTTPS and external checks pass after DNS propagation.
 - Retain the five newest VPS releases and report older releases; do not delete releases automatically.
 - The contact form behavior is unchanged by this migration; it currently acknowledges submission in the browser without sending data to a backend.
+- Upgrade Next.js from vulnerable `14.2.3` to patched `14.2.35`; the static export must not expose a Next.js server runtime.
 
 ---
 
@@ -31,6 +32,7 @@
 - Modify: `lib/youtube.ts`
 - Modify: `package.json`
 - Modify: `package-lock.json`
+- Create: `.eslintrc.json`
 
 **Interfaces:**
 - Consumes: existing App Router pages and build-time YouTube fetches
@@ -63,12 +65,15 @@ assert_absent() {
 }
 
 assert_contains next.config.js "output: 'export'"
+assert_contains next.config.js 'trailingSlash: true'
 assert_contains next.config.js 'unoptimized: true'
 assert_contains app/layout.tsx "metadataBase: new URL('https://agapehn.org')"
 assert_absent app/layout.tsx '@vercel/analytics'
 assert_absent app/page.tsx 'export const revalidate'
 assert_absent lib/youtube.ts 'next: { revalidate: 3600 }'
 assert_absent package.json '@vercel/analytics'
+assert_contains package.json '"next": "14.2.35"'
+assert_contains .eslintrc.json '"next/core-web-vitals"'
 
 printf 'Deployment contract passed.\n'
 ```
@@ -85,13 +90,14 @@ Expected: failure because `next.config.js` does not yet contain `output: 'export
 
 - [ ] **Step 3: Implement the minimal static-export configuration**
 
-Set `output: 'export'` and `images.unoptimized: true` in `next.config.js`. Add `metadataBase: new URL('https://agapehn.org')` to the root metadata, remove the Vercel Analytics component/import and dependency, and remove ISR-only `revalidate` declarations/options. Keep YouTube fetches in server code so they run at build time; their refresh cadence is supplied by the scheduled workflow in Task 2.
+Set `output: 'export'`, `trailingSlash: true`, and `images.unoptimized: true` in `next.config.js`. Add `metadataBase: new URL('https://agapehn.org')` to the root metadata, remove the Vercel Analytics component/import and dependency, and remove ISR-only `revalidate` declarations/options. Upgrade Next.js to `14.2.35` and create `.eslintrc.json` extending `next/core-web-vitals` so CI linting is non-interactive. Keep YouTube fetches in server code so they run at build time; their refresh cadence is supplied by the scheduled workflow in Task 2.
 
 - [ ] **Step 4: Run the contract and application checks**
 
 Run:
 
 ```bash
+set -euo pipefail
 bash tests/deployment-contract.sh
 npm run lint
 npm run build
@@ -143,8 +149,8 @@ The workflow must:
 3. Check out without persisting GitHub credentials.
 4. Run `npm ci`, the deployment contract, lint, build, and exported-route checks.
 5. Store the SSH key and verified host-key line in runner-temporary files with mode `600`.
-6. Transfer `out/` through `tar` to `/srv/www/agapehn/releases/.incoming-$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT`.
-7. Rename the incoming directory to `/srv/www/agapehn/releases/$GITHUB_SHA` only after transfer succeeds.
+6. Set `release_id="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"` so scheduled rebuilds of the same commit publish refreshed YouTube content.
+7. Transfer `out/` through `tar` to `/srv/www/agapehn/releases/.incoming-$release_id` and rename it to `/srv/www/agapehn/releases/$release_id` only after transfer succeeds.
 8. Atomically switch `current`, request `/` from `127.0.0.1` with `Host: agapehn.org`, and restore the previous symlink if the request fails.
 9. Print releases older than the newest five without deleting them.
 
@@ -168,7 +174,7 @@ Expected: YAML parses and the contract prints `Deployment contract passed.`
 Run:
 
 ```bash
-git add next.config.js app/layout.tsx app/page.tsx lib/youtube.ts package.json package-lock.json tests/deployment-contract.sh .github/workflows/deploy-production.yml docs/deployment-vps.md docs/superpowers/plans/2026-07-21-agapehn-vps-migration.md
+git add next.config.js app/layout.tsx app/page.tsx lib/youtube.ts package.json package-lock.json .eslintrc.json tests/deployment-contract.sh .github/workflows/deploy-production.yml docs/deployment-vps.md docs/superpowers/plans/2026-07-21-agapehn-vps-migration.md
 git diff --cached --check
 git commit -m "ci(deploy): add atomic VPS deployment"
 ```
@@ -342,7 +348,7 @@ Delete only the validated `migration_key_dir` temporary directory after verifyin
 
 - [ ] **Step 5: Push and verify the workflow**
 
-Push the migration commit to `main`, watch the `Deploy production` run, and verify that `/srv/www/agapehn/current` points to the pushed commit SHA. Confirm the workflow health check succeeds and the current Vercel-served public site remains unchanged.
+Push the migration commit to `main`, watch the `Deploy production` run, and verify that `/srv/www/agapehn/current` points to a release beginning with the pushed commit SHA. Confirm the workflow health check succeeds and the current Vercel-served public site remains unchanged.
 
 ### Task 6: Cut DNS over and enable HTTPS
 
