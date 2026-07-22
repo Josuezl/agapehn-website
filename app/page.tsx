@@ -3,8 +3,6 @@ import type { Metadata } from 'next'
 import { getRecentStreams, getRecentUploads } from '@/lib/youtube'
 import HeroParallax from '@/components/HeroParallax'
 
-export const revalidate = 3600
-
 export const metadata: Metadata = {
   title: 'Ministerio Internacional Ágape | En esta casa, cabemos todos',
   description: 'Una iglesia en Honduras sirviendo a Dios y la sociedad por muchos años. Servicios martes y domingos. ¡Bienvenido a casa!',
