@@ -156,7 +156,7 @@ The workflow must:
 4. Run `npm ci`, the deployment contract, script behavior tests, lint, build, and exported-route/YouTube-content checks.
 5. Store the SSH key and verified host-key line in runner-temporary files with mode `600`.
 6. Set `release_id="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"` so scheduled rebuilds of the same commit publish refreshed YouTube content.
-7. Upload a compressed archive to `/srv/www/agapehn/shared/.incoming-$release_id.tar.gz`; `scripts/install-release.sh` checks disk capacity, cleans failed incoming state, and renames the extracted directory only after validation.
+7. Upload a compressed archive to `/srv/www/agapehn/shared/.incoming-$release_id.tar.gz`; `scripts/install-release.sh` checks disk capacity, cleans failed or stale incoming state using exact release-name and direct-parent validation, and renames the extracted directory only after validation.
 8. Atomically switch `current`, follow HTTP/HTTPS locally with both ports resolved to `127.0.0.1`, validate the production title, and restore the previous symlink if content validation fails.
 9. After successful validation, keep the newest five releases and delete only older directories proven to be direct children of `/srv/www/agapehn/releases` and not the active target.
 10. Pin third-party Actions to full commit SHAs and let Dependabot propose reviewed updates.

@@ -41,7 +41,10 @@ Después de activar y validar un release, el workflow conserva los cinco más
 recientes y elimina únicamente directorios antiguos que hayan sido validados
 como hijos directos de `releases/`. Nunca poda antes del health check ni elimina
 el release activo. Una transferencia fallida limpia exclusivamente su archivo y
-directorio `.incoming-<release-id>`.
+directorio `.incoming-<release-id>`. La siguiente instalación válida también
+barre cargas interrumpidas anteriores, pero únicamente cuando sus nombres
+coinciden exactamente con el formato de release y son hijos directos de
+`shared/` o `releases/`.
 
 ## Verificación
 

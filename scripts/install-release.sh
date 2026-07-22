@@ -21,6 +21,37 @@ test -f "$archive"
 test ! -e "$incoming"
 test ! -e "$release"
 
+cleanup_stale_incoming() {
+  local canonical_releases_dir canonical_shared_dir candidate candidate_parent name
+
+  canonical_releases_dir="$(cd "$releases_dir" && pwd -P)"
+  canonical_shared_dir="$(cd "$shared_dir" && pwd -P)"
+  shopt -s nullglob
+
+  for candidate in "$shared_dir"/.incoming-*.tar.gz; do
+    [[ "$candidate" == "$archive" ]] && continue
+    name="${candidate##*/}"
+    [[ "$name" =~ ^\.incoming-[0-9a-f]{40}-[0-9]+-[0-9]+\.tar\.gz$ ]] || continue
+    candidate_parent="$(cd "$(dirname "$candidate")" && pwd -P)"
+    [[ "$candidate_parent" == "$canonical_shared_dir" ]] || continue
+    rm -f -- "$candidate"
+  done
+
+  for candidate in "$releases_dir"/.incoming-*; do
+    [[ "$candidate" == "$incoming" ]] && continue
+    name="${candidate##*/}"
+    [[ "$name" =~ ^\.incoming-[0-9a-f]{40}-[0-9]+-[0-9]+$ ]] || continue
+    candidate_parent="$(cd "$(dirname "$candidate")" && pwd -P)"
+    [[ "$candidate_parent" == "$canonical_releases_dir" ]] || continue
+    [[ -d "$candidate" || -L "$candidate" ]] || continue
+    rm -rf -- "$candidate"
+  done
+
+  shopt -u nullglob
+}
+
+cleanup_stale_incoming
+
 cleanup() {
   if [[ -f "$archive" ]]; then
     rm -f -- "$archive"

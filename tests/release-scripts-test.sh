@@ -26,6 +26,9 @@ if [[ "${FAKE_CURL_FAIL:-0}" == "1" ]]; then
 fi
 
 printf '<title>Ministerio Internacional Ágape | En esta casa, cabemos todos</title>\n'
+for _ in {1..20000}; do
+  printf 'homepage-content-padding\n'
+done
 FAKE_CURL
 chmod +x "$fake_bin/curl"
 
@@ -35,11 +38,25 @@ printf 'healthy\n' > "$fixture_root/payload/index.html"
 
 release_a="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-100-1"
 archive_a="$install_root/shared/.incoming-$release_a.tar.gz"
+stale_release="dddddddddddddddddddddddddddddddddddddddd-90-1"
+stale_archive="$install_root/shared/.incoming-$stale_release.tar.gz"
+stale_directory="$install_root/releases/.incoming-$stale_release"
+preserved_archive="$install_root/shared/.incoming-keep-me.tar.gz"
+preserved_directory="$install_root/releases/.incoming-keep-me"
+printf 'interrupted upload\n' > "$stale_archive"
+mkdir "$stale_directory"
+printf 'partial extraction\n' > "$stale_directory/partial.txt"
+printf 'unrelated file\n' > "$preserved_archive"
+mkdir "$preserved_directory"
 tar -C "$fixture_root/payload" -czf "$archive_a" .
 bash "$project_root/scripts/install-release.sh" "$install_root" "$release_a"
 test -f "$install_root/releases/$release_a/index.html"
 test ! -e "$archive_a"
 test ! -e "$install_root/releases/.incoming-$release_a"
+test ! -e "$stale_archive"
+test ! -e "$stale_directory"
+test -f "$preserved_archive"
+test -d "$preserved_directory"
 
 release_b="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb-101-1"
 archive_b="$install_root/shared/.incoming-$release_b.tar.gz"

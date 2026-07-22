@@ -34,11 +34,18 @@ fi
 ln -sfn "releases/$release_id" "$deploy_path/current.next"
 atomic_replace "$deploy_path/current.next" "$deploy_path/current"
 
-if ! curl -fsSL --max-time 20 \
+health_body=""
+health_failed=0
+if ! health_body="$(curl -fsSL --max-time 20 \
   --resolve "$healthcheck_host:80:127.0.0.1" \
   --resolve "$healthcheck_host:443:127.0.0.1" \
-  "http://$healthcheck_host/" |
-  grep -Fq '<title>Ministerio Internacional Ágape'; then
+  "http://$healthcheck_host/")"; then
+  health_failed=1
+elif [[ "$health_body" != *'<title>Ministerio Internacional Ágape'* ]]; then
+  health_failed=1
+fi
+
+if (( health_failed == 1 )); then
   if [[ -n "$previous" ]]; then
     ln -sfn "$previous" "$deploy_path/current.rollback"
     atomic_replace "$deploy_path/current.rollback" "$deploy_path/current"
