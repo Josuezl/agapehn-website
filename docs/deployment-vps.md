@@ -37,18 +37,26 @@ El usuario `deploy-agape` no tiene sudo y no puede modificar otros sitios.
 └── shared/
 ```
 
-El workflow conserva todos los releases y reporta los que quedan fuera de los
-cinco más recientes. No los elimina automáticamente.
+Después de activar y validar un release, el workflow conserva los cinco más
+recientes y elimina únicamente directorios antiguos que hayan sido validados
+como hijos directos de `releases/`. Nunca poda antes del health check ni elimina
+el release activo. Una transferencia fallida limpia exclusivamente su archivo y
+directorio `.incoming-<release-id>`.
 
 ## Verificación
 
 Antes de cambiar DNS, comprobar el virtual host dentro del VPS:
 
 ```bash
-curl -fsS -H 'Host: agapehn.org' http://127.0.0.1/ >/dev/null
-curl -fsS -H 'Host: agapehn.org' http://127.0.0.1/mensajes/ >/dev/null
-curl -fsS -H 'Host: agapehn.org' http://127.0.0.1/og-image.jpg >/dev/null
+curl -fsSL \
+  --resolve 'agapehn.org:80:127.0.0.1' \
+  --resolve 'agapehn.org:443:127.0.0.1' \
+  'http://agapehn.org/' |
+  grep -Fq '<title>Ministerio Internacional Ágape'
 ```
+
+Este check funciona antes y después de habilitar el redirect HTTPS con Certbot,
+y valida contenido del release en lugar de aceptar un redirect como éxito.
 
 Después del corte:
 
@@ -67,8 +75,15 @@ cd /srv/www/agapehn
 find releases -mindepth 1 -maxdepth 1 -type d -printf '%T@ %f\n' | sort -nr
 ln -sfn 'releases/RELEASE_ID' current.rollback
 mv -Tf current.rollback current
-curl -fsS -H 'Host: agapehn.org' http://127.0.0.1/ >/dev/null
+curl -fsSL \
+  --resolve 'agapehn.org:80:127.0.0.1' \
+  --resolve 'agapehn.org:443:127.0.0.1' \
+  'http://agapehn.org/' |
+  grep -Fq '<title>Ministerio Internacional Ágape'
 ```
+
+Revisar capacidad con `df -h /srv/www/agapehn`. La instalación rechaza un
+release si no dispone de tres veces el tamaño comprimido más 512 MiB libres.
 
 Durante el corte DNS, el rollback principal es restaurar los valores de Vercel
 registrados antes de la migración. Vercel debe mantenerse disponible hasta que

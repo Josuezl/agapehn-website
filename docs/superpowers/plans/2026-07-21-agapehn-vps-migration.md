@@ -16,7 +16,7 @@
 - Do not print private deployment keys or GitHub secrets.
 - Do not change DNS until the site passes local, VPS HTTP, and asset health checks.
 - Keep the Vercel project available until HTTPS and external checks pass after DNS propagation.
-- Retain the five newest VPS releases and report older releases; do not delete releases automatically.
+- Retain the five newest VPS releases and prune only validated older release directories after a successful content health check.
 - The contact form behavior is unchanged by this migration; it currently acknowledges submission in the browser without sending data to a backend.
 - Upgrade Next.js from vulnerable `14.2.3` to patched `14.2.35`; the static export must not expose a Next.js server runtime.
 
@@ -129,7 +129,13 @@ Expected: every request returns HTTP 200.
 
 **Files:**
 - Create: `.github/workflows/deploy-production.yml`
+- Create: `.github/dependabot.yml`
 - Create: `docs/deployment-vps.md`
+- Create: `scripts/install-release.sh`
+- Create: `scripts/activate-release.sh`
+- Create: `tests/export-health.sh`
+- Create: `tests/export-health-test.sh`
+- Create: `tests/release-scripts-test.sh`
 - Modify: `tests/deployment-contract.sh`
 
 **Interfaces:**
@@ -147,16 +153,17 @@ The workflow must:
 1. Trigger on pushes to `main`, `workflow_dispatch`, and `schedule` at minute 17 of every hour.
 2. Use one non-cancelling `production` concurrency group.
 3. Check out without persisting GitHub credentials.
-4. Run `npm ci`, the deployment contract, lint, build, and exported-route checks.
+4. Run `npm ci`, the deployment contract, script behavior tests, lint, build, and exported-route/YouTube-content checks.
 5. Store the SSH key and verified host-key line in runner-temporary files with mode `600`.
 6. Set `release_id="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"` so scheduled rebuilds of the same commit publish refreshed YouTube content.
-7. Transfer `out/` through `tar` to `/srv/www/agapehn/releases/.incoming-$release_id` and rename it to `/srv/www/agapehn/releases/$release_id` only after transfer succeeds.
-8. Atomically switch `current`, request `/` from `127.0.0.1` with `Host: agapehn.org`, and restore the previous symlink if the request fails.
-9. Print releases older than the newest five without deleting them.
+7. Upload a compressed archive to `/srv/www/agapehn/shared/.incoming-$release_id.tar.gz`; `scripts/install-release.sh` checks disk capacity, cleans failed incoming state, and renames the extracted directory only after validation.
+8. Atomically switch `current`, follow HTTP/HTTPS locally with both ports resolved to `127.0.0.1`, validate the production title, and restore the previous symlink if content validation fails.
+9. After successful validation, keep the newest five releases and delete only older directories proven to be direct children of `/srv/www/agapehn/releases` and not the active target.
+10. Pin third-party Actions to full commit SHAs and let Dependabot propose reviewed updates.
 
 - [ ] **Step 3: Document operations in `docs/deployment-vps.md`**
 
-Document the production URL, GitHub Environment secrets, `/srv/www/agapehn` layout, hourly YouTube refresh behavior, local and remote health checks, rollback command, DNS/HTTPS cutover, and the fact that the current contact form has no delivery backend.
+Document the production URL, GitHub Environment secrets, `/srv/www/agapehn` layout, hourly YouTube refresh behavior, five-release retention, local and remote content health checks, rollback command, DNS/HTTPS cutover, and the fact that the current contact form has no delivery backend.
 
 - [ ] **Step 4: Validate YAML and the complete contract**
 

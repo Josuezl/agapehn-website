@@ -31,12 +31,12 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           cache: npm
@@ -51,7 +51,10 @@ jobs:
           sudo apt-get install --yes ripgrep
 
       - name: Run deployment contract
-        run: bash tests/deployment-contract.sh
+        run: |
+          bash tests/deployment-contract.sh
+          bash tests/export-health-test.sh
+          bash tests/release-scripts-test.sh
 
       - name: Run lint
         run: npm run lint
@@ -60,13 +63,7 @@ jobs:
         run: |
           set -euo pipefail
           npm run build
-          test -f out/index.html
-          test -f out/nosotros/index.html
-          test -f out/visita/index.html
-          test -f out/mensajes/index.html
-          test -f out/iglesias/index.html
-          test -f out/contacto/index.html
-          test -f out/og-image.jpg
+          bash tests/export-health.sh out
 
       - name: Configure repository SSH key
         env:
@@ -78,6 +75,7 @@ jobs:
           test -n "$VPS_PORT"
           test -n "$VPS_USER"
           test -n "$DEPLOY_PATH"
+          test "$DEPLOY_PATH" = "/srv/www/agapehn"
           test -n "$VPS_SSH_KEY"
           test -n "$VPS_KNOWN_HOSTS"
 
@@ -101,13 +99,28 @@ jobs:
             -o StrictHostKeyChecking=yes
             -o UserKnownHostsFile="$KNOWN_HOSTS"
           )
+          SCP_OPTIONS=(
+            -i "$SSH_KEY"
+            -P "$VPS_PORT"
+            -o BatchMode=yes
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=yes
+            -o UserKnownHostsFile="$KNOWN_HOSTS"
+          )
           release_id="${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          release="$DEPLOY_PATH/releases/$release_id"
-          incoming="$DEPLOY_PATH/releases/.incoming-$release_id"
+          local_archive="$RUNNER_TEMP/$release_id.tar.gz"
+          remote_archive="$DEPLOY_PATH/shared/.incoming-$release_id.tar.gz"
 
-          tar -C out -czf - . |
+          tar -C out -czf "$local_archive" .
+          if ! scp "${SCP_OPTIONS[@]}" "$local_archive" \
+            "$VPS_USER@$VPS_HOST:$remote_archive"; then
             ssh "${SSH_OPTIONS[@]}" "$VPS_USER@$VPS_HOST" \
-              "set -eu; test ! -e '$release'; test ! -e '$incoming'; mkdir '$incoming'; tar -xzf - -C '$incoming'; mv '$incoming' '$release'"
+              "test '$DEPLOY_PATH' = '/srv/www/agapehn' && rm -f -- '$remote_archive'"
+            exit 1
+          fi
+
+          ssh "${SSH_OPTIONS[@]}" "$VPS_USER@$VPS_HOST" \
+            "bash -s -- '$DEPLOY_PATH' '$release_id'" < scripts/install-release.sh
 
       - name: Activate release and run health check
         run: |
@@ -125,36 +138,5 @@ jobs:
           release_id="${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
 
           ssh "${SSH_OPTIONS[@]}" "$VPS_USER@$VPS_HOST" \
-            "bash -s -- '$DEPLOY_PATH' '$release_id' '$HEALTHCHECK_HOST'" <<'REMOTE_ACTIVATE'
-          set -euo pipefail
-          deploy_path="$1"
-          release_id="$2"
-          healthcheck_host="$3"
-          previous=""
-
-          if [[ -L "$deploy_path/current" ]]; then
-            previous="$(readlink "$deploy_path/current")"
-          fi
-
-          ln -sfn "releases/$release_id" "$deploy_path/current.next"
-          mv -Tf "$deploy_path/current.next" "$deploy_path/current"
-
-          if ! curl -fsS -o /dev/null -H "Host: $healthcheck_host" http://127.0.0.1/; then
-            if [[ -n "$previous" ]]; then
-              ln -sfn "$previous" "$deploy_path/current.rollback"
-              mv -Tf "$deploy_path/current.rollback" "$deploy_path/current"
-              printf 'Health check failed; rollback restored %s\n' "$previous" >&2
-            else
-              printf 'Health check failed and no previous release exists\n' >&2
-            fi
-            exit 1
-          fi
-
-          printf 'Activated release %s\n' "$release_id"
-          printf 'Releases older than the newest five (not deleted):\n'
-          find "$deploy_path/releases" -mindepth 1 -maxdepth 1 -type d \
-            ! -name '.incoming-*' -printf '%T@ %f\n' |
-            sort -nr |
-            tail -n +6 |
-            cut -d' ' -f2- || true
-          REMOTE_ACTIVATE
+            "bash -s -- '$DEPLOY_PATH' '$release_id' '$HEALTHCHECK_HOST'" \
+            < scripts/activate-release.sh
