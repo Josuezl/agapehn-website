@@ -2,6 +2,8 @@ import Image from 'next/image'
 import type { Metadata } from 'next'
 import { getRecentStreams, getRecentUploads } from '@/lib/youtube'
 import HeroParallax from '@/components/HeroParallax'
+import EventSection from '@/components/events/EventSection'
+import { currentEvent } from '@/data/current-event'
 
 export const metadata: Metadata = {
   title: 'Ministerio Internacional Ágape | En esta casa, cabemos todos',
@@ -28,15 +30,6 @@ const expectations = [
   { title: 'Estacionamiento', description: 'Equipo dedicado a ayudarte desde que llegas. ¡Tu primera impresión es nuestra prioridad!' },
   { title: 'Info', description: 'Listo para responder todas tus preguntas y orientarte en tu primera visita.' },
 ]
-
-const currentEvent = {
-  label: 'Próximo Evento',
-  title: 'Próximamente',
-  description: 'Espera nuestro próximo evento pronto. Mantente pendiente de nuestras redes sociales para más información.',
-  date: '',
-  image: '/Eventos/proximo_evento.png',
-  formUrl: '',
-}
 
 const mainMinistries = [
   { name: 'Ágape Ora', description: 'Devocional transmitido por Facebook Live los lunes, miércoles y viernes a las 5:00 a.m.', schedule: 'Lun · Mié · Vie — 5:00 a.m.' },
@@ -218,52 +211,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/*
-          EVENTO ACTUAL
-       */}
-      <section id="evento" className="py-20 bg-white">
-        <div className="container-custom">
-          <div className="text-center mb-10">
-            <p className="text-teal font-bold text-xs uppercase tracking-[0.25em] mb-3">Próximo evento</p>
-            <h2 className="font-heading font-extrabold text-3xl md:text-4xl text-navy">
-              Mantente pendiente de nuestro próximo evento
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 rounded-3xl overflow-hidden shadow-xl border border-gray-100 min-h-[480px]">
-            {/* Imagen izquierda */}
-            <div className="relative min-h-[360px] lg:min-h-full">
-              <Image
-                src={currentEvent.image}
-                alt={currentEvent.title}
-                fill
-                className="object-cover"
-                style={{ objectPosition: 'center 20%' }}
-              />
-            </div>
-            {/* Contenido derecha */}
-            <div className="bg-white p-10 lg:p-14 flex flex-col justify-center">
-              <p className="text-teal font-bold text-xs uppercase tracking-[0.25em] mb-4">{currentEvent.label}</p>
-              <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-navy mb-4 leading-tight">
-                {currentEvent.title}
-              </h2>
-              <p className="text-gray-600 text-base leading-relaxed mb-5">{currentEvent.description}</p>
-              {currentEvent.date && (
-                <p className="text-gray-400 text-sm mb-8">{currentEvent.date}</p>
-              )}
-              {currentEvent.formUrl && (
-                <a
-                  href={currentEvent.formUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 self-start px-8 py-3.5 bg-navy text-white font-bold rounded-full hover:bg-navy-dark transition-colors text-base"
-                >
-                  Registrarme →
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      <EventSection event={currentEvent} />
 
       {/*
           VISITA
