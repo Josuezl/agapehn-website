@@ -53,6 +53,7 @@ jobs:
       - name: Run deployment contract
         run: |
           bash tests/deployment-contract.sh
+          bash tests/admin-theme-test.sh
           bash tests/export-health-test.sh
           bash tests/release-scripts-test.sh
 

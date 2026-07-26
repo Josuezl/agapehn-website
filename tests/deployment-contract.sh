@@ -42,6 +42,7 @@ assert_contains ".github/workflows/deploy-production.yml" 'release_id="${GITHUB_
 assert_contains ".github/workflows/deploy-production.yml" "StrictHostKeyChecking=yes"
 assert_contains ".github/workflows/deploy-production.yml" 'bash tests/export-health.sh out'
 assert_contains ".github/workflows/deploy-production.yml" 'bash tests/export-health-test.sh'
+assert_contains ".github/workflows/deploy-production.yml" 'bash tests/admin-theme-test.sh'
 assert_contains ".github/workflows/deploy-production.yml" 'bash tests/release-scripts-test.sh'
 assert_contains ".github/workflows/deploy-production.yml" 'bash -s --'
 assert_contains ".github/dependabot.yml" 'package-ecosystem: github-actions'

@@ -1,0 +1,192 @@
+section[class*="StyledAuthenticationPage"] {
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  box-sizing: border-box;
+  gap: 0 !important;
+  padding: 48px 24px 88px !important;
+  overflow: hidden;
+  color: #ffffff;
+  background-color: #2a3d68;
+  box-shadow: inset 0 4px 0 #00bcd4;
+}
+
+section[class*="StyledAuthenticationPage"]::before {
+  content: "Panel administrativo Ágape";
+  order: 1;
+  margin-top: 24px;
+  color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+section[class*="StyledAuthenticationPage"]::after {
+  content: "Actualiza la información de tu próximo evento";
+  order: 2;
+  max-width: 420px;
+  margin: 10px 0 30px;
+  color: rgba(255, 255, 255, 0.76);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+}
+
+section[class*="StyledAuthenticationPage"]
+  [class*="CustomIconWrapper"] {
+  order: 0;
+  width: 132px !important;
+  height: 132px !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+section[class*="StyledAuthenticationPage"]
+  [class*="CustomIconWrapper"]
+  img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+section[class*="StyledAuthenticationPage"] button[class*="LoginButton"] {
+  order: 3;
+  width: auto !important;
+  min-width: 260px;
+  min-height: 50px;
+  padding: 0 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  background-color: #00bcd4 !important;
+  box-shadow: 0 10px 24px rgba(10, 22, 42, 0.25);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+section[class*="StyledAuthenticationPage"]
+  button[class*="LoginButton"]:hover {
+  background-color: #0097a7 !important;
+  box-shadow: 0 12px 28px rgba(10, 22, 42, 0.32);
+  transform: translateY(-1px);
+}
+
+section[class*="StyledAuthenticationPage"]
+  button[class*="LoginButton"]:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.78);
+  outline-offset: 3px;
+}
+
+section[class*="StyledAuthenticationPage"]
+  button[class*="LoginButton"]
+  svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+section[class*="StyledAuthenticationPage"]
+  a[class*="GoBackButtonStyle"] {
+  order: 4;
+  width: auto !important;
+  height: auto !important;
+  margin: 18px 0 0 !important;
+  color: rgba(255, 255, 255, 0.76) !important;
+  transition: color 160ms ease;
+}
+
+section[class*="StyledAuthenticationPage"]
+  a[class*="GoBackButtonStyle"]:hover {
+  color: #ffffff !important;
+}
+
+section[class*="StyledAuthenticationPage"]
+  a[class*="GoBackButtonStyle"]:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid #00bcd4;
+  outline-offset: 4px;
+}
+
+section[class*="StyledAuthenticationPage"]
+  a[class*="GoBackButtonStyle"]
+  p {
+  color: inherit !important;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px !important;
+}
+
+section[class*="StyledAuthenticationPage"]
+  a[class*="GoBackButtonStyle"]
+  path {
+  fill: currentColor !important;
+}
+
+section[class*="StyledAuthenticationPage"]
+  [class*="NetlifyCreditIcon"] {
+  width: 74px !important;
+  height: 42px !important;
+  bottom: 24px !important;
+  opacity: 0.48;
+  filter: grayscale(1) brightness(0) invert(1);
+}
+
+section[class*="StyledAuthenticationPage"]
+  [class*="NetlifyCreditIcon"]
+  svg {
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 480px) {
+  section[class*="StyledAuthenticationPage"] {
+    padding: 36px 20px 72px !important;
+  }
+
+  section[class*="StyledAuthenticationPage"]::before {
+    margin-top: 20px;
+    font-size: 24px;
+  }
+
+  section[class*="StyledAuthenticationPage"]::after {
+    max-width: 300px;
+    margin-bottom: 26px;
+    font-size: 14px;
+  }
+
+  section[class*="StyledAuthenticationPage"]
+    [class*="CustomIconWrapper"] {
+    width: 112px !important;
+    height: 112px !important;
+    padding: 12px;
+  }
+
+  section[class*="StyledAuthenticationPage"] button[class*="LoginButton"] {
+    width: min(100%, 290px) !important;
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  section[class*="StyledAuthenticationPage"] button[class*="LoginButton"],
+  section[class*="StyledAuthenticationPage"]
+    a[class*="GoBackButtonStyle"] {
+    transition: none;
+  }
+
+  section[class*="StyledAuthenticationPage"]
+    button[class*="LoginButton"]:hover {
+    transform: none;
+  }
+}
