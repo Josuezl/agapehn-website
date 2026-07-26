@@ -31,6 +31,7 @@ assert_absent "lib/youtube.ts" "next: { revalidate: 3600 }"
 assert_absent "package.json" "@vercel/analytics"
 assert_contains "package.json" '"next": "14.2.35"'
 assert_contains ".eslintrc.json" '"next/core-web-vitals"'
+assert_contains "public/admin/config.yml" "preview: false"
 assert_contains ".github/workflows/deploy-production.yml" "cron: '17 * * * *'"
 assert_contains ".github/workflows/deploy-production.yml" "environment: production"
 assert_contains ".github/workflows/deploy-production.yml" "persist-credentials: false"

@@ -18,6 +18,9 @@ site_url: https://agapehn.org
 display_url: https://agapehn.org
 logo_url: https://agapehn.org/Logos/logo-principal.png
 
+editor:
+  preview: false
+
 media_folder: public/Eventos
 public_folder: /Eventos
 
