@@ -1,0 +1,12 @@
+{
+  "label": "Próximo evento",
+  "title": "Inextinguible Camp 2026",
+  "description": "Vive una experiencia inolvidable junto a una generación encendida por Dios. Aparta tu espacio y acompáñanos en este campamento.",
+  "date": "16 - 18 de octubre de 2026",
+  "price": "Entrada: L1,200",
+  "images": [
+    "/Eventos/inextinguible-camp-2026-01.jpeg",
+    "/Eventos/inextinguible-camp-2026-02.jpeg"
+  ],
+  "registrationUrl": "https://forms.gle/BAFKdqAct6ekSZBY8"
+}

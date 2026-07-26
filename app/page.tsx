@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { getRecentStreams, getRecentUploads } from '@/lib/youtube'
 import HeroParallax from '@/components/HeroParallax'
 import EventSection from '@/components/events/EventSection'
-import { currentEvent } from '@/data/current-event'
+import { currentEvent } from '@/lib/current-event'
 
 export const metadata: Metadata = {
   title: 'Ministerio Internacional Ágape | En esta casa, cabemos todos',

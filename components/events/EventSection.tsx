@@ -1,8 +1,8 @@
 import Image from 'next/image'
-import type { Event } from '@/data/current-event'
+import type { EventContent } from '@/lib/event-content'
 
 interface EventSectionProps {
-  event: Event
+  event: EventContent
 }
 
 export default function EventSection({ event }: EventSectionProps) {

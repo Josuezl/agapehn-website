@@ -1,0 +1,69 @@
+locale: es
+
+backend:
+  name: github
+  repo: Josuezl/agapehn-website
+  branch: main
+  base_url: https://cms-auth.informaticahn.com
+  auth_endpoint: auth
+  site_domain: agapehn.org
+  use_graphql: true
+  commit_messages:
+    update: "content(evento): actualizar {{slug}}"
+    uploadMedia: "content(evento): agregar {{path}}"
+    deleteMedia: "content(evento): eliminar {{path}}"
+
+publish_mode: simple
+site_url: https://agapehn.org
+display_url: https://agapehn.org
+logo_url: https://agapehn.org/Logos/logo-principal.png
+
+media_folder: public/Eventos
+public_folder: /Eventos
+
+collections:
+  - name: evento
+    label: Evento
+    files:
+      - name: actual
+        label: Evento actual
+        file: content/current-event.json
+        format: json
+        fields:
+          - label: Etiqueta
+            name: label
+            widget: string
+            hint: Texto corto que aparece sobre el título.
+          - label: Nombre del evento
+            name: title
+            widget: string
+          - label: Descripción
+            name: description
+            widget: text
+          - label: Fecha
+            name: date
+            widget: string
+          - label: Precio
+            name: price
+            widget: string
+          - label: Imágenes
+            name: images
+            widget: list
+            min: 1
+            max: 10
+            summary: "{{fields.image}}"
+            field:
+              label: Imagen
+              name: image
+              widget: image
+              choose_url: false
+              media_library:
+                config:
+                  max_file_size: 10485760
+          - label: Enlace de inscripción
+            name: registrationUrl
+            widget: string
+            hint: Debe comenzar con https://
+            pattern:
+              - "^https://.+"
+              - Ingresa un enlace seguro que comience con https://
