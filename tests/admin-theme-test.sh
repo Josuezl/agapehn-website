@@ -11,7 +11,7 @@ assert_contains() {
   fi
 }
 
-assert_contains "public/admin/index.html" 'href="/admin/admin-theme.css"'
+assert_contains "public/admin/index.html" 'href="/admin/admin-theme.css?v=2"'
 assert_contains "public/admin/admin-theme.css" 'section[class*="StyledAuthenticationPage"]'
 assert_contains "public/admin/admin-theme.css" 'Panel administrativo Ágape'
 assert_contains "public/admin/admin-theme.css" 'button[class*="LoginButton"]'
