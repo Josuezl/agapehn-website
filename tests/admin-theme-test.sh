@@ -15,5 +15,7 @@ assert_contains "public/admin/index.html" 'href="/admin/admin-theme.css"'
 assert_contains "public/admin/admin-theme.css" 'section[class*="StyledAuthenticationPage"]'
 assert_contains "public/admin/admin-theme.css" 'Panel administrativo Ágape'
 assert_contains "public/admin/admin-theme.css" 'button[class*="LoginButton"]'
+assert_contains "public/admin/admin-theme.css" 'border: 0;'
+assert_contains "public/admin/admin-theme.css" 'background-color: transparent;'
 
 printf 'Admin theme tests passed.\n'

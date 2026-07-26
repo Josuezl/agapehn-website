@@ -42,10 +42,9 @@ section[class*="StyledAuthenticationPage"]
   height: 132px !important;
   box-sizing: border-box;
   margin: 0 !important;
-  padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0;
+  border: 0;
+  background-color: transparent;
 }
 
 section[class*="StyledAuthenticationPage"]
@@ -169,7 +168,7 @@ section[class*="StyledAuthenticationPage"]
     [class*="CustomIconWrapper"] {
     width: 112px !important;
     height: 112px !important;
-    padding: 12px;
+    padding: 0;
   }
 
   section[class*="StyledAuthenticationPage"] button[class*="LoginButton"] {
